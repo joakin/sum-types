@@ -1,0 +1,17 @@
+{
+  "name": "sum-types",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape -r esm 'tests/**/*.js'"
+  },
+  "keywords": [],
+  "author": "Joaquin Oltra <joaquin@chimeces.com> (http://chimeces.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "esm": "^3.0.17",
+    "tap-dot": "^1.0.5",
+    "tape": "^4.9.0"
+  }
+}
