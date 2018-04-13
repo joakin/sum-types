@@ -457,7 +457,142 @@
 </ul>
     </nav>
     <article id="main" class="content">
-      
+      <h1>Type</h1>
+<p>Use the function <code>Type</code> to create a new sum type. Use <code>_</code> as a placeholder for
+argument slots if you want.</p>
+<pre><code class="language-js">import { Type, _ } from &quot;@joakin/sum-types&quot;;
+</code></pre>
+<h2><code>_</code></h2>
+<p>Just a placeholder to use when defining types</p>
+<pre><code class="language-js">const Card = Type({
+  Credit: [_, _, _],
+  Debit: [_, _]
+});
+</code></pre>
+<h2><code>Type(options, [prototype], [statics]): SumType</code></h2>
+<ul>
+<li><code>options</code>: <code>{ [OptionName]: any[] }</code>
+<ul>
+<li>Object of options for the sum types. The <strong>keys</strong> will become functions on
+the returned sum type, and the <strong>values</strong> are an array to define how many
+params the option needs</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">const Status = Type({
+  Loading: [],
+  Success: [_],
+  Error: [_, _]
+});
+
+const status = Status.Success(42);
+// &gt; Success(42)
+</code></pre>
+<ul>
+<li><code>prototype</code>: <code>{ [methodName]: Function }</code>
+<ul>
+<li>Object of methods or variables to attach to the type’s prototype</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">const Status = Type(
+  {
+    Loading: [],
+    Success: [_],
+    Error: [_, _]
+  },
+  {
+    map(fn) {
+      return this.match({
+        Loading: _ =&gt; this,
+        Success: value =&gt; Status.Success(fn(value)),
+        Error: _ =&gt; this
+      });
+    }
+  }
+);
+
+Status.Loading().map(x =&gt; x * x);
+// &gt; Loading
+</code></pre>
+<ul>
+<li><code>options</code>: <code>{ [methodName]: Function }</code>
+<ul>
+<li>Object of methods or variables to attach to the type itself</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-js">const Status = Type(
+  {
+    Loading: [],
+    Success: [_],
+    Error: [_, _]
+  },
+  {},
+  {
+    to42String(x) {
+      return 42 + x.toString();
+    }
+  }
+);
+
+Status.to42String(Status.Error(&quot;Fail&quot;, 42));
+// &gt; Error(Fail, 42)
+</code></pre>
+<h2><code>SumType</code></h2>
+<p>Calling <code>Type</code> will return a new <code>SumType</code>, with:</p>
+<ul>
+<li>the options attached as constructor functions</li>
+<li>the statics on it (see example above)</li>
+<li>and a <code>match</code> function helper</li>
+</ul>
+<h3><code>SumType.Option(...params) : instance</code></h3>
+<p>The options you passed when constructing the type are exposed as functions on
+the returned SumType.</p>
+<pre><code class="language-js">const Decision = Type({ Yes: [], No: [] });
+const yes = Decision.Yes();
+const no = Decision.No();
+</code></pre>
+<h3><code>SumType.match({ [OptionName]: (...OptionValues) =&gt; any }): ((instance) =&gt; any)</code></h3>
+<p><code>SumType.match</code> provides a helper to create a function that will match on
+options.</p>
+<pre><code class="language-js">const Decision = Type({ Yes: [], No: [] });
+
+const processDecision = Decision.match({
+  Yes: _ =&gt; &quot;Thank you for staying with us!&quot;,
+  No: _ =&gt; &quot;We're sorry to see you go :(&quot;
+});
+
+console.log(processDecision(Decision.Yes()));
+// &gt; &quot;Thank you for staying with us!&quot;
+</code></pre>
+<h2>SumType instance</h2>
+<p>When you call one of the option constructor functions, you will get an instance
+of the sum type.</p>
+<p>That instance has by default two methods: <code>match</code> and <code>toString</code>, plus any
+prototype methods defined when creating the sum type.</p>
+<h3><code>instance.match({ [OptionName]: (...OptionValues) =&gt; any }): any</code></h3>
+<p>Match on an instance to have something happen depending on the Option the
+instance is. Like a nice <code>switch</code> statement that returns the value of the
+executed branch.</p>
+<pre><code class="language-js">const Decision = Type({ Yes: [], No: [&quot;num1&quot;, &quot;num2&quot;] });
+
+const decision = Decision.No(3, 7);
+
+decision.match({
+  Yes: _ =&gt; &quot;Thank you for staying with us!&quot;,
+  No: (num1, num2) =&gt; `${num1}, ${num2}. We're sorry to see you go :(`
+});
+// &gt; &quot;3, 7. We're sorry to see you go :(&quot;
+</code></pre>
+<h3><code>instance.toString(): String</code></h3>
+<p>Prints the instance to String.</p>
+<pre><code class="language-js">const Decision = Type({ Yes: [], No: [&quot;reason&quot;] });
+
+Decision.No(&quot;Because no&quot;).toString();
+// &gt; No(Because no)
+</code></pre>
+
     </article>
   </div>
   <script>

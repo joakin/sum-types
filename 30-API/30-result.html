@@ -457,7 +457,146 @@
 </ul>
     </nav>
     <article id="main" class="content">
-      
+      <h1>Result</h1>
+<pre><code class="language-js">import { Result } from &quot;@joakin/sum-types&quot;;
+
+Result.Ok(4).match({
+  Ok: num =&gt; `Got ${num}`,
+  Err: err =&gt; `Got ${err}`
+});
+</code></pre>
+<h2>Options</h2>
+<h3><code>Result.Ok(value: any)</code></h3>
+<h3><code>Result.Err(err: any)</code></h3>
+<h2>Prototype methods</h2>
+<h3><code>result.toString()</code></h3>
+<h3><code>result.match(options)</code></h3>
+<pre><code class="language-js">result.match({
+  Ok: value =&gt; doSomething(value),
+  Err: error =&gt; doSomethingElse(error)
+});
+</code></pre>
+<h3><code>result.withDefault(defaultValue: any)</code></h3>
+<p>Returns the inner value of the result, giving back the <code>defaultValue</code> if the
+result was a <code>Err</code>.</p>
+<pre><code class="language-js">Result.Ok(4).withDefault(0);
+// &gt; 4
+
+Result.Err(&quot;Fail&quot;).withDefault(0);
+// &gt; 0
+</code></pre>
+<h3><code>result.map(fn)</code></h3>
+<p>Apply <code>fn</code> to the inner value if it is a <code>Ok</code>. Does nothing if it is an <code>Err</code>.</p>
+<pre><code class="language-js">Result.Ok(5)
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Ok(25)
+
+Result.Err(&quot;Fail&quot;)
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Err(Fail)
+</code></pre>
+<h3><code>result.mapError(fn)</code></h3>
+<p>Apply <code>fn</code> to the inner error if it is a <code>Err</code>. Does nothing if it is an <code>Ok</code>.</p>
+<pre><code class="language-js">Result.Ok(5)
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Ok(25)
+
+Result.Err(&quot;Fail&quot;)
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Err(Fail)
+</code></pre>
+<h3><code>result.andThen(fn)</code></h3>
+<p>Apply <code>fn</code> to the inner value if it is an <code>Ok</code>. Like <code>.map</code>, but the function’s
+return value will be returned directly, without wrapping it in <code>Ok</code>, so <code>fn</code>
+should return a <code>Result</code> itself.</p>
+<pre><code class="language-js">Result.Ok(5)
+  // Square numbers &gt;= 5
+  .andThen(x =&gt; (x &gt;= 5 ? Result.Ok(x * x) : Result.Err(&quot;Less than 5&quot;)))
+  .toString();
+// &gt; Ok(25)
+</code></pre>
+<h3><code>result.toMaybe()</code></h3>
+<p>Convert the result into a maybe.</p>
+<pre><code class="language-js">Result.Ok(5)
+  .toMaybe()
+  .toString();
+// &gt; Just(5)
+
+Result.Err(&quot;Fail&quot;)
+  .toMaybe()
+  .toString();
+// &gt; Nothing
+</code></pre>
+<h3><code>result.unwrap()</code></h3>
+<p>Convert the result into a JS value. Will throw the error if it was <code>Err</code>, or
+return the inner value if it was an <code>Ok</code>.</p>
+<pre><code class="language-js">Result.Ok(5).unwrap();
+// &gt; 5
+
+Result.Err(&quot;Fail&quot;).unwrap();
+// &gt; Uncaught Error: Fail
+</code></pre>
+<h2>Static methods</h2>
+<h3><code>Result.match</code></h3>
+<p>Inherited from <code>Type</code></p>
+<h3><code>Result.try(fn)</code></h3>
+<p>Get a result from running a function. If <code>fn</code> throws, the failure will be
+capture and wrapped in <code>Err</code>.</p>
+<pre><code class="language-js">t.equal(
+  Result.try(() =&gt; {
+    throw new Error(&quot;Fail&quot;);
+  }).toString(),
+  &quot;Err(Error: Fail)&quot;
+);
+t.equal(Result.try(() =&gt; 5).toString(), &quot;Ok(5)&quot;);
+</code></pre>
+<h3><code>Result.fromMaybe(value: Maybe): Result</code></h3>
+<p>Create a result from a maybe. If the value is a <code>Maybe.Just</code>, it will become a
+<code>Ok</code>, otherwise a <code>Ok(value)</code>.</p>
+<pre><code class="language-js">Result.fromMaybe(&quot;Failed&quot;, Maybe.Just(5)).toString();
+// &gt; Ok(5)
+
+Result.fromMaybe(&quot;Failed&quot;, Maybe.Nothing()).toString();
+// &gt; Err(Failed)
+</code></pre>
+<h3><code>Result.fromPromise(value: Promise&lt;value, err&gt;): Promise&lt;Result&lt;value, err&gt;</code></h3>
+<p>Convert the <code>Promise&lt;value, error&gt;</code> into a <code>Promise&lt;Result&lt;value, error&gt;&gt;</code>.</p>
+<pre><code class="language-js">Result.fromPromise(Promise.resolve(5)).then(
+  result =&gt; console.log(result.toString())
+  // &gt; Ok(5)
+);
+Result.fromPromise(Promise.reject(&quot;Fail&quot;)).then(
+  result =&gt; console.log(result.toString())
+  // &gt; Err(Fail)
+);
+</code></pre>
+<pre><code class="language-js">async function get(title) {
+  const json = fetch(url(title)).then(res =&gt; res.json());
+  return await Result.fromPromise(json);
+}
+
+(async () =&gt; {
+  const coordinates = (await get(&quot;Alicante&quot;)).map(data =&gt; data.coords);
+  coordinates.match({
+    Ok: coords =&gt; console.log(`City is at: ${coords}`),
+    Err: err =&gt; console.error(`City couldn't be found. Reason: ${err}`)
+  });
+})();
+</code></pre>
+<h3><code>Result.map(fn, ...results): Result</code></h3>
+<p>Map <code>fn</code> over a list of results. <code>fn</code> will be called only if all values are
+<code>Ok</code>, with the values unwrapped, and return the result of <code>fn</code> in a <code>Ok</code>.</p>
+<pre><code class="language-js">Result.map((x, y) =&gt; x * y, Result.Ok(5), Result.Ok(3)).toString();
+// &gt; Ok(15)
+
+Result.map((x, y) =&gt; x * y, Result.Ok(5), Result.Err(&quot;Fail&quot;)).toString();
+// &gt; Err(Fail)
+</code></pre>
+
     </article>
   </div>
   <script>

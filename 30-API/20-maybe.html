@@ -457,7 +457,88 @@
 </ul>
     </nav>
     <article id="main" class="content">
-      
+      <h1>Maybe</h1>
+<pre><code class="language-js">import { Maybe } from &quot;@joakin/sum-types&quot;;
+
+Maybe.Just(4).match({
+  Just: num =&gt; `got ${num}`,
+  Nothing: _ =&gt; `Got nothing`
+});
+</code></pre>
+<h2>Options</h2>
+<h3><code>Maybe.Just(value: any)</code></h3>
+<h3><code>Maybe.Nothing()</code></h3>
+<h2>Prototype methods</h2>
+<h3><code>maybe.toString()</code></h3>
+<h3><code>maybe.match(options)</code></h3>
+<pre><code class="language-js">maybeValue.match({
+  Just: value =&gt; doSomething(value),
+  Nothing: _ =&gt; doSomethingElse()
+});
+</code></pre>
+<h3><code>maybe.withDefault(defaultValue: any)</code></h3>
+<p>Returns the inner value of the maybe, giving back the <code>defaultValue</code> if the
+maybe was a <code>Nothing</code>.</p>
+<pre><code class="language-js">Maybe.Just(4).withDefault(0);
+// &gt; 4
+
+Maybe.Nothing().withDefault(0);
+// &gt; 0
+</code></pre>
+<h3><code>maybe.map(fn)</code></h3>
+<p>Apply <code>fn</code> to the inner value if it is a <code>Just</code>. Does nothing if it is a
+<code>Nothing</code>.</p>
+<pre><code class="language-js">Maybe.Just(5)
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Just(25)
+
+Maybe.Nothing()
+  .map(x =&gt; x * x)
+  .toString();
+// &gt; Nothing
+</code></pre>
+<h3><code>maybe.andThen(fn)</code></h3>
+<p>Apply <code>fn</code> to the inner value if it is a <code>Just</code>. Like <code>.map</code>, but the function’s
+return value will be returned directly, without wrapping it in <code>Just</code>, so <code>fn</code>
+should return a <code>Maybe</code> itself.</p>
+<pre><code class="language-js">Maybe.Just(5)
+  // Square numbers &gt;= 5
+  .andThen(x =&gt; (x &gt;= 5 ? Maybe.Just(x * x) : Maybe.Nothing()))
+  .toString();
+// &gt; Just(25)
+</code></pre>
+<h3><code>maybe.unwrap()</code></h3>
+<p>Convert the maybe into a JS value. Will be <code>null</code> if it was <code>Nothing</code>, or the
+inner value if it was a <code>Just</code>.</p>
+<pre><code class="language-js">Maybe.Just(5).unwrap();
+// &gt; 5
+
+Maybe.Nothing().unwrap();
+// &gt; null
+</code></pre>
+<h2>Static methods</h2>
+<h3><code>Maybe.match</code></h3>
+<p>Inherited from <code>Type</code></p>
+<h3><code>Maybe.from(value: any)</code></h3>
+<p>Create a maybe from any JS value. If the value is <code>null</code> or <code>undefined</code>, it will
+become a <code>Nothing</code>, otherwise a <code>Just(value)</code>.</p>
+<pre><code class="language-js">Maybe.from(null).toString();
+// &gt; Nothing
+
+Maybe.from(5).toString();
+// &gt; Just(5)
+</code></pre>
+<h3><code>Maybe.map(fn, ...maybes): Maybe</code></h3>
+<p>Map <code>fn</code> over a list of maybes. <code>fn</code> will be called only if all values are
+<code>Just</code>, with the values unwrapped, and return the result of <code>fn</code> in a <code>Just</code>.</p>
+<pre><code class="language-js">Maybe.map((x, y) =&gt; x * y, Maybe.Just(5), Maybe.Just(3)).toString();
+// &gt; Just(15)
+
+Maybe.map((x, y) =&gt; x * y, Maybe.Just(5), Maybe.Nothing()).toString();
+// &gt; Nothing
+</code></pre>
+
     </article>
   </div>
   <script>
