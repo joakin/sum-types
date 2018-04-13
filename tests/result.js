@@ -69,5 +69,13 @@ test("Result", t => {
     Result.map((x, y) => x * y, Result.Ok(5), Result.Ok(5)).withDefault(1),
     25
   );
-  t.end();
+
+  Promise.all([
+    Result.fromPromise(Promise.resolve(5)).then(result =>
+      t.equal(result.toString(), "Ok(5)")
+    ),
+    Result.fromPromise(Promise.reject("Fail")).then(result =>
+      t.equal(result.toString(), "Err(Fail)")
+    )
+  ]).then(_ => t.end());
 });

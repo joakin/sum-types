@@ -60,6 +60,11 @@ const Result = Type(
         Nothing: _ => Result.Err(err)
       });
     },
+    fromPromise(promise) {
+      return promise
+        .then(value => Result.Ok(value))
+        .catch(err => Result.Err(err));
+    },
     map(fn, ...results) {
       const values = [];
       for (let i in results) {
