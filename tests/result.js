@@ -1,5 +1,5 @@
 import test from "tape";
-import { Result } from "../src/index";
+import { Result, Maybe } from "../src/index";
 
 test("Result", t => {
   t.equal(Result.Ok(5).toString(), "Ok(5)");
@@ -68,6 +68,20 @@ test("Result", t => {
   t.equal(
     Result.map((x, y) => x * y, Result.Ok(5), Result.Ok(5)).withDefault(1),
     25
+  );
+
+  t.equal(
+    Result.try(() => {
+      throw new Error("Fail");
+    }).toString(),
+    "Err(Error: Fail)"
+  );
+  t.equal(Result.try(() => 5).toString(), "Ok(5)");
+
+  t.equal(Result.fromMaybe("Failed", Maybe.Just(5)).toString(), "Ok(5)");
+  t.equal(
+    Result.fromMaybe("Failed", Maybe.Nothing()).toString(),
+    "Err(Failed)"
   );
 
   Promise.all([
