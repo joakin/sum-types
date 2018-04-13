@@ -1,7 +1,7 @@
 # @joakin/sum-types
 
 ```
-npm install sum-types
+npm install @joakin/sum-types
 ```
 
 `sum-types` provides union|adt|sum types for JS.
