@@ -1,6 +1,6 @@
 {
   "name": "@joakin/sum-types",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "scripts": {
     "build": "microbundle",
@@ -13,7 +13,9 @@
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
   "module": "dist/index.m.js",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "keywords": [],
   "author": "Joaquin Oltra <joaquin@chimeces.com> (http://chimeces.com)",
   "license": "ISC",
