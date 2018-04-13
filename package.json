@@ -1,5 +1,5 @@
 {
-  "name": "sum-types",
+  "name": "@joakin/sum-types",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "Joaquin Oltra <joaquin@chimeces.com> (http://chimeces.com)",
   "license": "ISC",
+  "repository": {
+    "url": "https://github.com/joakin/sum-types/"
+  },
   "devDependencies": {
     "esm": "^3.0.17",
     "gh-pages": "^1.1.0",
