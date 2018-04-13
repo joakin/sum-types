@@ -1,4 +1,4 @@
-import { Type, _ } from "./index";
+import { Type, _ } from "./type";
 
 const Maybe = Type(
   {
