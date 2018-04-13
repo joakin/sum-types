@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:docs": "cp README.md docs/index.md && markdown-folder-to-html",
+    "deploy:docs": "npm run build:docs && gh-pages -d _docs",
+    "format": "prettier --write '{src,tests}/**/*.js' '**/*.md'",
     "test": "tape -r esm 'tests/**/*.js'"
   },
   "keywords": [],
@@ -11,6 +14,9 @@
   "license": "ISC",
   "devDependencies": {
     "esm": "^3.0.17",
+    "gh-pages": "^1.1.0",
+    "markdown-folder-to-html": "^1.6.0",
+    "prettier": "^1.12.0",
     "tap-dot": "^1.0.5",
     "tape": "^4.9.0"
   }
