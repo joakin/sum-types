@@ -2,13 +2,18 @@
   "name": "@joakin/sum-types",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "build": "microbundle",
     "build:docs": "cp README.md docs/index.md && markdown-folder-to-html",
     "deploy:docs": "npm run build:docs && gh-pages -d _docs",
     "format": "prettier --write '{src,tests}/**/*.js' '**/*.md'",
     "test": "tape -r esm 'tests/**/*.js'"
   },
+  "source": "src/index.js",
+  "main": "dist/index.js",
+  "umd:main": "dist/index.umd.js",
+  "module": "dist/index.m.js",
+  "files": ["dist/"],
   "keywords": [],
   "author": "Joaquin Oltra <joaquin@chimeces.com> (http://chimeces.com)",
   "license": "ISC",
@@ -19,6 +24,7 @@
     "esm": "^3.0.17",
     "gh-pages": "^1.1.0",
     "markdown-folder-to-html": "^1.6.0",
+    "microbundle": "^0.4.4",
     "prettier": "^1.12.0",
     "tap-dot": "^1.0.5",
     "tape": "^4.9.0"
