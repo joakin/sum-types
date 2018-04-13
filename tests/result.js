@@ -1,5 +1,5 @@
 import test from "tape";
-import Result from "../src/result";
+import { Result } from "../src/index";
 
 test("Result", t => {
   t.equal(Result.Ok(5).toString(), "Ok(5)");

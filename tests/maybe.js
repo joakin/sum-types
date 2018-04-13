@@ -1,5 +1,5 @@
 import test from "tape";
-import Maybe from "../src/maybe";
+import { Maybe } from "../src/index";
 
 test("Maybe", t => {
   const five = Maybe.Just(5);
