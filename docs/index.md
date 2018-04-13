@@ -19,15 +19,15 @@ const State = Type({
   Error: ["error"]
 });
 
-let state = State.Loading();
-let state = State.Success(42);
-let state = State.Error(new Error("Failed"));
+let state1 = State.Loading();
+let state2 = State.Success(42);
+let state3 = State.Error(new Error("Failed"));
 
 function toString(state) {
   return state.match({
     Loading: _ => "Loading",
-    Success: data => `Got data ${state.data}`,
-    Error: err => `Got error: ${state.error}`
+    Success: data => `Got data ${data}`,
+    Error: err => `Got error: ${err}`
   });
 }
 
@@ -35,7 +35,7 @@ function toString(state) {
 
 const toString = State.match({
   Loading: _ => "Loading",
-  Success: data => `Got data ${state.data}`,
-  Error: err => `Got error: ${state.error}`
+  Success: data => `Got data ${data}`,
+  Error: err => `Got error: ${err}`
 });
 ```

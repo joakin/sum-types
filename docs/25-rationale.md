@@ -30,9 +30,9 @@ const loading = _ => ({ type: "loading" });
 const success = d => ({ type: "success", data: d });
 const error = err => ({ type: "error", error: err });
 
-let state = loading();
-let state = success(42);
-let state = error(new Error("Failed"));
+let state1 = loading();
+let state2 = success(42);
+let state3 = error(new Error("Failed"));
 
 function toString(state) {
   switch (state.type) {
@@ -61,9 +61,9 @@ class StateError extends State {
   }
 }
 
-let state = new Loading();
-let state = new Success(42);
-let state = new StateError(new Error("Failed"));
+let state1 = new Loading();
+let state2 = new Success(42);
+let state3 = new StateError(new Error("Failed"));
 
 function toString(state) {
   if (state instanceof Loading) {
@@ -88,15 +88,15 @@ const State = Type({
   Error: ["error"]
 });
 
-let state = State.Loading();
-let state = State.Success(42);
-let state = State.Error(new Error("Failed"));
+let state1 = State.Loading();
+let state2 = State.Success(42);
+let state3 = State.Error(new Error("Failed"));
 
 function toString(state) {
   return state.match({
     Loading: _ => "Loading",
-    Success: data => `Got data ${state.data}`,
-    Error: err => `Got error: ${state.error}`
+    Success: data => `Got data ${data}`,
+    Error: err => `Got error: ${err}`
   });
 }
 
@@ -104,8 +104,8 @@ function toString(state) {
 
 const toString = State.match({
   Loading: _ => "Loading",
-  Success: data => `Got data ${state.data}`,
-  Error: err => `Got error: ${state.error}`
+  Success: data => `Got data ${data}`,
+  Error: err => `Got error: ${err}`
 });
 ```
 
