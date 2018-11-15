@@ -537,7 +537,7 @@ Status.Loading().map(x =&gt; x * x);
 );
 
 Status.to42String(Status.Error(&quot;Fail&quot;, 42));
-// &gt; Error(Fail, 42)
+// &gt; 42Error(Fail, 42)
 </code></pre>
 <h2><code>SumType</code></h2>
 <p>Calling <code>Type</code> will return a new <code>SumType</code>, with:</p>
@@ -546,7 +546,7 @@ Status.to42String(Status.Error(&quot;Fail&quot;, 42));
 <li>the statics on it (see example above)</li>
 <li>and a <code>match</code> function helper</li>
 </ul>
-<h3><code>SumType.Option(...params) : instance</code></h3>
+<h3><code>SumType.[Option](...params) : instance</code></h3>
 <p>The options you passed when constructing the type are exposed as functions on
 the returned SumType.</p>
 <pre><code class="language-js">const Decision = Type({ Yes: [], No: [] });
