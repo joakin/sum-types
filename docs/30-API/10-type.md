@@ -80,7 +80,7 @@ const Status = Type(
 );
 
 Status.to42String(Status.Error("Fail", 42));
-// > Error(Fail, 42)
+// > 42Error(Fail, 42)
 ```
 
 ## `SumType`
@@ -91,7 +91,7 @@ Calling `Type` will return a new `SumType`, with:
 * the statics on it (see example above)
 * and a `match` function helper
 
-### `SumType.Option(...params) : instance`
+### `SumType.[Option](...params) : instance`
 
 The options you passed when constructing the type are exposed as functions on
 the returned SumType.
